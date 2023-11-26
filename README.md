@@ -3,7 +3,7 @@ Backend для проекта хакатона "Яндекс.Практикум"
 
 ## Авторы:
 ```
-- Владислав Тарасов (https://github.com/BAR2LEHI)
+- Владислав Тарасов(https://github.com/BAR2LEHI)
 - Анастасия Пушкарная(https://github.com/Anastasia7Si)
 ```
 
