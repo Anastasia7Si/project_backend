@@ -17,7 +17,6 @@ def get_db():
         db.close()
 
 
-
 @app.get('/dealers/{dealer_id}/', response_model=schemas.Dealer)
 def get_dealer(dealer_id: int, db: Session = Depends(get_db)):
     db_dealer = crud.get_dealer(db, dealer_id=dealer_id)

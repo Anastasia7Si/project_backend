@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel
 
 
-#Схемы для модели продукта Дилера
+# Схемы для модели продукта Дилера
 class DealerPriceBase(BaseModel):
     product_key: int
     price: float
@@ -21,10 +21,10 @@ class DealerPrice(DealerPriceBase):
 
 
 class DealerPriceCreate(DealerPriceBase):
-    pass 
+    pass
 
 
-#Схемы для модели Дилера
+# Схемы для модели Дилера
 class DealerBase(BaseModel):
     name: str
 
@@ -38,10 +38,10 @@ class Dealer(DealerBase):
 
 
 class DealerCreate(DealerBase):
-    pass 
+    pass
 
 
-#Схемы для модели продукта Компании
+# Схемы для модели продукта Компании
 class Product(BaseModel):
     id: int
     arcticle: str
@@ -53,9 +53,9 @@ class Product(BaseModel):
     category_id: float
     ozon_name: str
     name_1c: str
-    wb_name: str 
-    ozon_article: str 
-    wb_article: str 
+    wb_name: str
+    ozon_article: str
+    wb_article: str
     ym_article_td: str
 
     class Config:
@@ -63,10 +63,10 @@ class Product(BaseModel):
 
 
 class ProductCreate(BaseModel):
-    pass 
+    pass
 
 
-#Схема для промежуточной таблицы связи продуктов
+# Схема для промежуточной таблицы связи продуктов
 class ProductDealerKey(BaseModel):
     id: int
     key: int

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    build: .
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    container_name: postgresql_db
+    image: postgres:15
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - db_postgresql:/var/lib/postgresql/data
+
+volumes:
+  db_postgresql:
