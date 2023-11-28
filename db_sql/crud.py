@@ -5,17 +5,18 @@ from . import models, schemas
 
 # CRUD для Дилера
 
-#Получение Дилера
+# Получение Дилера
 def get_dealer(db: Session, dealer_id: int):
-    return db.query(models.Dealer).filter(models.Dealer.id == dealer_id).first()
+    return db.query(models.Dealer).filter(
+        models.Dealer.id == dealer_id).first()
 
 
-#Получение списка Дилеров
+# Получение списка Дилеров
 def get_dealers(db: Session, limit: int):
     return db.query(models.Dealer).limit(limit).all()
 
 
-#Запись Дилера в БД
+# Запись Дилера в БД
 def create_dealer(db: Session, dealer: schemas.DealerCreate):
     db_dealer = models.Dealer(**dealer.model_dump())
     db.add(db_dealer)
@@ -26,7 +27,7 @@ def create_dealer(db: Session, dealer: schemas.DealerCreate):
 
 ### CRUD для продуктов Дилера
 
-#Получение продуктов Дилеров
+# Получение продуктов Дилеров
 def get_dealers_prices(db: Session, dealer_name: str, limit: int):
     if dealer_name:
         return db.query(
@@ -39,7 +40,7 @@ def get_dealers_prices(db: Session, dealer_name: str, limit: int):
     return db.query(models.DealerPrice).limit(limit).all()
 
 
-#Получение продукта Дилера
+# Получение продукта Дилера
 def get_dealer_price(db: Session, price_id: int):
     return db.query(
         models.DealerPrice
@@ -48,7 +49,7 @@ def get_dealer_price(db: Session, price_id: int):
     ).first()
 
 
-#Запись продукта Дилера в БД
+# Запись продукта Дилера в БД
 def create_dealer_price(db: Session, dealer_price: schemas.DealerPrice):
     db_dealer_price = models.DealerPrice(**dealer_price.model_dump())
     db.add(db_dealer_price)
@@ -59,17 +60,17 @@ def create_dealer_price(db: Session, dealer_price: schemas.DealerPrice):
 
 ### CRUD
 
-#Получение продуктов Компании
+# Получение продуктов Компании
 def get_company_products(db: Session, limit: int):
     return db.query(models.Product).limit(limit)
 
 
-#Получение продукта Компании
+# Получение продукта Компании
 def get_company_product(db: Session, product_id: int):
     return db.query(models.Product).filter(models.Product.id == product_id)
 
 
-#Запись продукта Компании
+# Запись продукта Компании
 def create_company_product(db: Session, product: schemas.ProductCreate):
     company_product = models.Product(**product.model_dump())
     db.add(company_product)

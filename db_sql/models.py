@@ -1,12 +1,12 @@
 from sqlalchemy import (Column, TIMESTAMP, Float, ForeignKey, Integer,
                         String, Boolean)
 from sqlalchemy.orm import relationship
-from datetime  import datetime
+from datetime import datetime
 
 from .database import Base
 
 
-#Модель Дилера
+# Модель Дилера
 class Dealer(Base):
     __tablename__ = 'marketing_dealer'
 
@@ -16,7 +16,7 @@ class Dealer(Base):
     dealer_product = relationship('DealerPrice')
 
 
-#Модель продукта Дилера
+# Модель продукта Дилера
 class DealerPrice(Base):
     __tablename__ = 'marketing_dealerprice'
 
@@ -32,7 +32,7 @@ class DealerPrice(Base):
     dealer = relationship('Dealer')
 
 
-#Модель продукта Компании
+# Модель продукта Компании
 class Product(Base):
     __tablename__ = 'marketing_product'
 
@@ -52,7 +52,7 @@ class Product(Base):
     ym_article_td = Column(String(30), nullable=True)
 
 
-#Модель соответствия продуктов
+# Модель соответствия продуктов
 class ProductDealerKey(Base):
     __tablename__ = 'marketing_productdealerkey'
 
