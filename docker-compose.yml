@@ -10,10 +10,12 @@ services:
     command: bash -c "alembic upgrade head"
     volumes:
       - .:/app
+    restart: always
     ports:
       - 8000:8000
     depends_on:
       - db
+      - web
     env_file:
       - ./.env
 
@@ -21,7 +23,6 @@ services:
     image: nginx:1.25.2-alpine
     depends_on:
       - db
-      - app
     ports:
       - "8080:80"
     volumes:
