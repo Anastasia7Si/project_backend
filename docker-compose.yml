@@ -2,9 +2,8 @@ version: '3.8'
 
 services:
   app:
-    container_name: app
     environment:
-      - SQLALCHEMY_DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DATABASE_URL=${DATABASE_URL}
     build:
       context: .
       dockerfile: ./db_sql/Dockerfile
@@ -15,11 +14,10 @@ services:
       - 8000:8000
     depends_on:
       - db
-    networks:
-      - test
+    env_file:
+      - ./.env
 
   web:
-    container_name: web
     image: nginx:1.25.2-alpine
     depends_on:
       - db
@@ -28,11 +26,8 @@ services:
       - "8080:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - test
 
   db:
-    container_name: postgres
     image: postgres:15
     ports:
       - 5432:5432
@@ -45,6 +40,3 @@ services:
 
 volumes:
   db_postgresql:
-
-networks:
-  test:
