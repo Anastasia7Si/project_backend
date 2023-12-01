@@ -1,8 +1,8 @@
-"""Add option lazy to all models
+"""migration
 
-Revision ID: 032b6ef653f2
-Revises: ff73be3ab375
-Create Date: 2023-12-01 04:19:40.550429
+Revision ID: 84844c2fe76a
+Revises: de83e68a6820
+Create Date: 2023-12-01 07:46:43.230027
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '032b6ef653f2'
-down_revision: Union[str, None] = 'ff73be3ab375'
+revision: str = '84844c2fe76a'
+down_revision: Union[str, None] = 'de83e68a6820'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

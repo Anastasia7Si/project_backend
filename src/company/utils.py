@@ -4,9 +4,10 @@ from sqlalchemy import select
 
 from . import models, schemas
 
-### CRUD
+# ## CRUD
 
-#Получение продуктов Компании
+
+# Получение продуктов Компании
 async def get_company_products(db: AsyncSession, limit: int):
     result = await db.execute(
         select(
@@ -16,7 +17,7 @@ async def get_company_products(db: AsyncSession, limit: int):
     return result.scalars().all()
 
 
-#Получение продукта Компании
+# Получение продукта Компании
 async def get_company_product(db: AsyncSession, product_id: int):
     result = await db.execute(
         select(
@@ -28,8 +29,9 @@ async def get_company_product(db: AsyncSession, product_id: int):
     return result.scalars().first()
 
 
-#Запись продукта Компании
-async def create_company_product(db: AsyncSession, product: schemas.ProductCreate):
+# Запись продукта Компании
+async def create_company_product(db: AsyncSession,
+                                 product: schemas.ProductCreate):
     company_product = models.Product(**product.model_dump())
     db.add(company_product)
     await db.commit()

@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from ..database import Base
 
 
-#Модель Дилера
+# Модель Дилера
 class Dealer(Base):
     __tablename__ = 'marketing_dealer'
 
@@ -17,7 +17,7 @@ class Dealer(Base):
     dealer_product = relationship('DealerPrice', lazy='joined')
 
 
-#Модель продукта Дилера
+# Модель продукта Дилера
 class DealerPrice(Base):
     __tablename__ = 'marketing_dealerprice'
 
@@ -35,7 +35,7 @@ class DealerPrice(Base):
     dealer = relationship('Dealer', lazy='joined')
 
 
-#Модель соответствия продуктов
+# Модель соответствия продуктов
 class ProductDealerKey(Base):
     __tablename__ = 'marketing_productdealerkey'
 
