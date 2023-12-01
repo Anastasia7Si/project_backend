@@ -9,7 +9,7 @@ Backend для проекта хакатона "Яндекс.Практикум"
 
 ## Технологии:
 ```
-- Python 3.
+- Python 3.11
 - Fastapi 0.104
 - Uvicorn 0.24
 - SQLAlchemy 2.0
@@ -32,13 +32,24 @@ git clone git@github.com:Anastasia7Si/project_backend.git
 cd project_backend
 ```
 
-### Переход в папку с docker-compose для запуска контейнеров (доступ по http://localhost/api/v1/)
+### Для запуска контейнеров (доступ по http://localhost:80/)
 ```
-cd infra/
+
 ```
 - Создать файл .env и прописать в него свои данные.
 Пример:
 ```
+DB_NAME=db_name
+DB_USER=db_user
+DB_PASS=db_password
+DB_HOST=db_host_name
+DB_PORT=db_port
+DATABASE_URL=db_url
+POSTGRES_PASSWORD=db_password
+POSTGRES_USER=db_user
+POSTGRES_DB=db_name
+POSTGRES_PORT=db_port
+POSTGRES_SERVER=db_host_name
 ```
 Запуск проекта
 ```
@@ -46,10 +57,9 @@ docker-compose up -d
 ```
 Создание суперпользователя
 ```
-docker-compose exec backend python manage.py createsuperuser
 ```
 
-### Переход в папку с backend для запуска проекта локально (доступ по http://127.0.0.1:8000/)
+### Для запуска проекта локально (доступ по http://127.0.0.1:8000/)
 Cоздать и активировать виртуальное окружение:
 ```
 python -m venv venv
@@ -61,7 +71,7 @@ pip install -r requirements.txt
 ```
 Запустить проект:
 ```
-
+uvicorn src.main:app
 ```
 
 ## Запуск тестов

@@ -1,8 +1,8 @@
-"""Add option lazy to Dealer
+"""migration
 
-Revision ID: ff73be3ab375
-Revises: e897b91a53fb
-Create Date: 2023-12-01 03:20:06.907294
+Revision ID: 5bf79533731a
+Revises: 4e79c79a1751
+Create Date: 2023-12-01 08:08:51.894066
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'ff73be3ab375'
-down_revision: Union[str, None] = 'e897b91a53fb'
+revision: str = '5bf79533731a'
+down_revision: Union[str, None] = '4e79c79a1751'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

@@ -5,7 +5,7 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./db_sql/Dockerfile
+      dockerfile: ./src/Dockerfile
     volumes:
       - .:/app
     ports:
@@ -19,12 +19,12 @@ services:
     depends_on:
       - db
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
 
   db:
-    image: postgres:15
+    image: postgres:13-alpine
     ports:
       - 5432:5432
     env_file: .env

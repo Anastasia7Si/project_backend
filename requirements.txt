@@ -6,7 +6,6 @@ bcrypt==4.0.1
 click==8.1.7
 colorama==0.4.6
 exceptiongroup==1.2.0
-fastadmin==0.1.41
 fastapi==0.104.1
 greenlet==3.0.1
 gunicorn==20.1.0

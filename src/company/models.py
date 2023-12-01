@@ -5,7 +5,7 @@ from sqlalchemy import (Column, Float, Integer,
 from ..database import Base
 
 
-#Модель продукта Компании
+# Модель продукта Компании
 class Product(Base):
     __tablename__ = 'marketing_product'
 
