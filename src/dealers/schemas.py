@@ -1,7 +1,7 @@
-from typing import List, Optional
 from datetime import datetime
-from pydantic import BaseModel, Field
+from typing import List, Optional
 
+from pydantic import BaseModel, Field
 
 ### Схемы продуктов Дилера
 
@@ -17,7 +17,9 @@ class DealerPriceBase(BaseModel):
 
 #Схема чтения продукта Дилера
 class DealerPrice(DealerPriceBase):
-    markup: bool
+    markup: bool | None
+    unclaimed: bool | None
+    postponed: bool | None
     id: int
 
     class Config:
@@ -81,21 +83,22 @@ class ProductCreate(ProductBase):
 
 #Базовая схема для промежуточной модели
 class ProductDealerKeyBase(BaseModel):
-    key: int
     product_id: int
     dealer_id: int
 
-    product: Product
-    dealer: Dealer
 
 #Схема чтения промежуточной модели 
-class ProductDealerKey(BaseModel):
+class ProductDealerKey(ProductDealerKeyBase):
+    key: int
     date_markup: datetime
     id: int
+
+    product: Product
+    dealer: Dealer
 
     class Config:
         orm_mode = True
 
 #Схема записи промежуточной модели
-class ProductDealerKeyCreate(ProductDealerKey):
+class ProductDealerKeyCreate(ProductDealerKeyBase):
     pass

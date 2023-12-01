@@ -1,8 +1,8 @@
-"""Add back populates at Dealer Price
+"""Async engine
 
-Revision ID: ca9988f33bdd
-Revises: 9d5831cd6ef3
-Create Date: 2023-11-27 23:58:19.798252
+Revision ID: e897b91a53fb
+Revises: 
+Create Date: 2023-12-01 02:38:29.137623
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'ca9988f33bdd'
-down_revision: Union[str, None] = '9d5831cd6ef3'
+revision: str = 'e897b91a53fb'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

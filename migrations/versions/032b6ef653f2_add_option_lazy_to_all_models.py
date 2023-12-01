@@ -1,8 +1,8 @@
-"""Add back populates at Dealer Price
+"""Add option lazy to all models
 
-Revision ID: 10d2d82ee23c
-Revises: ca9988f33bdd
-Create Date: 2023-11-27 23:59:32.003396
+Revision ID: 032b6ef653f2
+Revises: ff73be3ab375
+Create Date: 2023-12-01 04:19:40.550429
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '10d2d82ee23c'
-down_revision: Union[str, None] = 'ca9988f33bdd'
+revision: str = '032b6ef653f2'
+down_revision: Union[str, None] = 'ff73be3ab375'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

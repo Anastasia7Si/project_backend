@@ -1,9 +1,10 @@
-from sqlalchemy import (Column, TIMESTAMP, Float, ForeignKey, Integer,
-                        String, Boolean)
-from sqlalchemy.orm import relationship
-from datetime  import datetime
+from datetime import datetime
 
-from .database import Base
+from sqlalchemy import (TIMESTAMP, Boolean, Column, Float, ForeignKey, Integer,
+                        String)
+from sqlalchemy.orm import relationship
+
+from ..database import Base
 
 
 #Модель Дилера
@@ -13,7 +14,7 @@ class Dealer(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
 
-    dealer_product = relationship('DealerPrice')
+    dealer_product = relationship('DealerPrice', lazy='joined')
 
 
 #Модель продукта Дилера
@@ -28,28 +29,10 @@ class DealerPrice(Base):
     date = Column(String, nullable=False)
     dealer_id = Column(ForeignKey('marketing_dealer.id'), nullable=False)
     markup = Column(Boolean, default=False)
+    unclaimed = Column(Boolean, default=False)
+    postponed = Column(Boolean, default=False)
 
-    dealer = relationship('Dealer')
-
-
-#Модель продукта Компании
-class Product(Base):
-    __tablename__ = 'marketing_product'
-
-    id = Column(Integer, primary_key=True)
-    article = Column(String(30))
-    ean_13 = Column(String(15), nullable=True)
-    name = Column(String(150), nullable=True)
-    cost = Column(Float, nullable=True)
-    min_recommended_price = Column(Float, nullable=True)
-    recommended_price = Column(Float, nullable=True)
-    category_id = Column(Float, nullable=True)
-    ozon_name = Column(String(150), nullable=True)
-    name_1c = Column(String(150), nullable=True)
-    wb_name = Column(String(150), nullable=True)
-    ozon_article = Column(String(30), nullable=True)
-    wb_article = Column(String(30), nullable=True)
-    ym_article_td = Column(String(30), nullable=True)
+    dealer = relationship('Dealer', lazy='joined')
 
 
 #Модель соответствия продуктов
@@ -62,5 +45,5 @@ class ProductDealerKey(Base):
     product_id = Column(Integer, ForeignKey('marketing_product.id'))
     dealer_id = Column(Integer, ForeignKey('marketing_dealer.id'))
 
-    product = relationship('Product')
-    dealer = relationship('Dealer')
+    product = relationship('Product', lazy='joined')
+    dealer = relationship('Dealer', lazy='joined')
