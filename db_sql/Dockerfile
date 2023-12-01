@@ -4,19 +4,15 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        gcc \
-        libpq-dev
-
 WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+RUN python -m pip install --upgrade pip
+RUN pip install -r requirements.txt --no-cache-dir
 
-COPY . /app
+COPY . .
 
-EXPOSE 8000
+COPY entrypoint.sh /app/db_sql/entrypoint.sh
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0"]
+ENTRYPOINT [ "sh", "entrypoint.sh" ]

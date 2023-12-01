@@ -2,22 +2,17 @@ version: '3.8'
 
 services:
   app:
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
+    env_file: .env
     build:
       context: .
       dockerfile: ./db_sql/Dockerfile
-    command: bash -c "alembic upgrade head"
     volumes:
       - .:/app
-    restart: always
     ports:
       - 8000:8000
     depends_on:
       - db
       - web
-    env_file:
-      - ./.env
 
   web:
     image: nginx:1.25.2-alpine
@@ -32,10 +27,7 @@ services:
     image: postgres:15
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=${DB_NAME}
+    env_file: .env
     volumes:
       - db_postgresql:/var/lib/postgresql/data
 
