@@ -5,9 +5,20 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
-from db_sql import models
+import os
+import sys
 
+
+sys.path.append(os.path.join(sys.path[0], 'src'))
+
+
+from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+from src.database import Base
+from src.dealers.models import ProductDealerKey, Dealer, DealerPrice
+from src.company.models import Product
+
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
 config = context.config
 
 section = config.config_ini_section
@@ -20,7 +31,16 @@ config.set_section_option(section, 'DB_USER', DB_USER)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = models.Base.metadata
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+target_metadata = Base.metadata
+
+# other values from the config, defined by the needs of env.py,
+# can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
+# ... etc.
 
 
 def run_migrations_offline() -> None:
