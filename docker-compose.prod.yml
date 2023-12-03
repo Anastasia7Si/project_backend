@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: anasti97/backend
     restart: always
     ports:
       - 8000:8000
@@ -13,9 +11,7 @@ services:
       - db
 
   frontend:
-    build:
-      context: ./frontend./
-      dockerfile: Dockerfile
+    image: anasti97/frontend
     command: cp -r /app/dist/. /frontend_static/
     volumes:
       - static:/frontend_static
@@ -29,7 +25,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - static:/staticfiles
+      -  static:/staticfiles
     depends_on:
       - frontend
 
