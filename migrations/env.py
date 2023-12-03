@@ -9,7 +9,8 @@ import os
 import sys
 
 
-sys.path.append(os.path.join(sys.path[0], 'src'))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
 
 
 from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER

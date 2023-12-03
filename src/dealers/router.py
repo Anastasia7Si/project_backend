@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -6,13 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
 from . import schemas, utils
-
-
-class AllowQuery(str, Enum):
-    markup = 'markup'
-    unclaimed = 'unclaimed'
-    postponed = 'postponed'
-
+from .enum import AllowStatus
 
 router = APIRouter(
     prefix='/dealers',
@@ -27,13 +20,9 @@ router = APIRouter(
             response_model=List[schemas.DealerPrice])
 async def get_dealers_products(db: AsyncSession = Depends(get_async_session),
                                dealer_name: str = None,
-                               markup: bool = None,
-                               unclaimed: bool = None,
-                               limit: int = None,
-                               postponed: bool = None):
-    print(limit)
-    db_products_dealers = await utils.get_dealers_prices(db, dealer_name,
-                                                         limit=limit)
+                               status: AllowStatus = None,
+                               limit: int = None,):
+    db_products_dealers = await utils.get_dealers_prices(db, dealer_name, status, limit)
     if db_products_dealers is None:
         raise HTTPException(status_code=404, detail='Not found')
     return db_products_dealers
@@ -51,24 +40,17 @@ async def get_dealer_product(product_id: int,
 
 
 # Эндпоинт для создания связи и markup продукта дилера
-@router.put('/products/{product_id}/{action}/',
+@router.put('/products/{dealer_product_id}/{status}/',
             response_model=schemas.DealerPrice)
-async def markup_dealer_product(
-                          product_id: int,
-                          action: AllowQuery,
+async def status_dealer_product(
+                          dealer_product_id: int,
+                          status: AllowStatus,
                           keys: schemas.ProductDealerKeyCreate | None = None,
                           db: AsyncSession = Depends(get_async_session)):
-    if action is AllowQuery.markup:
-        if not keys:
-            raise HTTPException(status_code=400,
-                                detail='Нет тела запроса для markup')
-        await utils.markup_dealer_price(db, product_id)
-        await utils.create_relation_products(db, product_id, keys)
-    if action is AllowQuery.unclaimed:
-        await utils.unclaimed_dealer_price(db, product_id)
-    if action is AllowQuery.postponed:
-        await utils.postponed_dealer_price(db, product_id)
-    return await utils.get_dealer_price(db, product_id)
+    if status is AllowStatus.markup and not keys:
+        raise HTTPException(status_code=400, detail='Для разметки необходимы ключ дилера и продукта компании')
+    await utils.set_status_dealer_product(db, dealer_product_id, status, keys)
+    return await utils.get_dealer_price(db, dealer_product_id)
 
 
 # Эндпоинт записи продукта Дилера
