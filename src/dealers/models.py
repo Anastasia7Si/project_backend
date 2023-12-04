@@ -29,7 +29,9 @@ class DealerPrice(Base):
     product_name = Column(String(150), nullable=False)
     date = Column(String, nullable=False)
     dealer_id = Column(ForeignKey('marketing_dealer.id'), nullable=False)
-    status = Column(pgEnum('markup', 'unclaimed', 'postponed', 'waiting', name='status_type'), default='waiting', nullable=True)
+    status = Column(pgEnum('markup', 'unclaimed', 'postponed', 'waiting',
+                           name='status_type'), default='waiting',
+                    nullable=True)
 
     dealer = relationship('Dealer', lazy='joined')
 
