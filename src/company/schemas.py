@@ -9,15 +9,14 @@ class ProductBase(BaseModel):
     ean_13: str
     name: str
     cost: float = Field(gt=0)
-    min_recommended_price: float | None
     recommended_price: float | None = Field(gt=0)
     category_id: float
     ozon_name: str
     name_1c: str
     wb_name: str
     ozon_article: str
-    wb_article: str
-    ym_article_td: str
+    wb_article_td: str
+    ym_article: str
 
 
 # Схема чтения продукта Компании

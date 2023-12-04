@@ -1,11 +1,11 @@
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from . import models, schemas
+from .enum import AllowStatus
+
+
 
 # CRUD для Дилера
-
-
 # Получение Дилера
 async def get_dealer(db: AsyncSession, dealer_id: int):
     results = await db.execute(
@@ -35,8 +35,20 @@ async def create_dealer(db: AsyncSession, dealer: schemas.DealerCreate):
 # ## CRUD для продуктов Дилера
 
 # Получение продуктов Дилеров
-async def get_dealers_prices(db: AsyncSession, dealer_name: str = None,
-                             markup: bool = None,  limit: int = None):
+async def get_dealers_prices(db: AsyncSession, dealer_name: str,
+                             status: AllowStatus,  limit: int):
+    if dealer_name and status:
+        results = await db.execute(
+            select(
+                models.DealerPrice
+            ).join(
+                models.Dealer
+            ).filter(
+                models.Dealer.name == dealer_name,
+                models.DealerPrice.status == status.value
+            ).limit(limit)
+        )
+        return results.unique().scalars().all()
     if dealer_name:
         results = await db.execute(
             select(
@@ -47,9 +59,20 @@ async def get_dealers_prices(db: AsyncSession, dealer_name: str = None,
                 models.Dealer.name == dealer_name
             ).limit(limit)
         )
-        return results.scalars().all()
+        return results.unique().scalars().all()
+    if status:
+        results = await db.execute(
+            select(
+                models.DealerPrice
+            ).join(
+                models.Dealer
+            ).filter(
+                models.DealerPrice.status == status.value
+            ).limit(limit)
+        )
+        return results.unique().scalars().all()
     results = await db.execute(select(models.DealerPrice).limit(limit))
-    return results.scalars().all()
+    return results.unique().scalars().all()
 
 
 # Получение продукта Дилера
@@ -77,7 +100,8 @@ async def create_dealer_price(db: AsyncSession, dealer_price: schemas.DealerPric
 async def create_relation_products(db: AsyncSession, product_id: int,
                                    product_key: schemas.ProductDealerKeyCreate):
     product_relation = models.ProductDealerKey(
-        key=product_id, **product_key.model_dump())
+        key=product_id, **product_key.model_dump()
+    )
     db.add(product_relation)
     await db.commit()
     return product_relation
@@ -92,36 +116,19 @@ async def get_relation_products(db: AsyncSession):
     return results.unique().scalars().all()
 
 
-async def markup_dealer_price(db: AsyncSession, product_id: int):
+async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, status: AllowStatus, keys: schemas.ProductDealerKeyCreate = None):
+    if status is AllowStatus.markup:
+        await create_relation_products(db, dealer_product_id, keys)
     stmt = (
-        update(models.DealerPrice).
-        where(models.DealerPrice.id == product_id).
-        values(markup = True).
-        returning(models.DealerPrice)
-    )
-    result = await db.execute(stmt)
-    await db.commit()
-    return result.first()
-
-
-async def unclaimed_dealer_price(db: AsyncSession, product_id: int):
-    stmt = (
-        update(models.DealerPrice).
-        where(models.DealerPrice.id == product_id).
-        values(unclaimed = True).
-        returning(models.DealerPrice)
-    )
-    result = await db.execute(stmt)
-    await db.commit()
-    return result.first()
-
-
-async def postponed_dealer_price(db: AsyncSession, product_id: int):
-    stmt = (
-        update(models.DealerPrice).
-        where(models.DealerPrice.id == product_id).
-        values(postponed = True).
-        returning(models.DealerPrice)
+        update(
+            models.DealerPrice
+        ).where(
+            models.DealerPrice.id == dealer_product_id
+        ).values(
+            status = status.value
+        ).returning(
+            models.DealerPrice
+        )
     )
     result = await db.execute(stmt)
     await db.commit()
