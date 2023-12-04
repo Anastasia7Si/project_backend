@@ -6,7 +6,7 @@ Backend для проекта хакатона "Яндекс.Практикум"
 ## Авторы
 
 - [Владислав Тарасов](https://github.com/BAR2LEHI)
-- [Анастасия Пушкарна](https://github.com/Anastasia7Si)
+- [Анастасия Пушкарная](https://github.com/Anastasia7Si)
 
 ## Технологии
 
