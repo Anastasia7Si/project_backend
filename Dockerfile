@@ -13,6 +13,6 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 COPY . .
 
-COPY entrypoint.sh /app/db_sql/entrypoint.sh
+EXPOSE 80
 
 ENTRYPOINT [ "sh", "entrypoint.sh" ]
