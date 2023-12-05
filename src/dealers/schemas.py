@@ -57,11 +57,13 @@ class DealerCreate(DealerBase):
 
 # ##Схемы промежуточной таблицы связи продуктов
 
+
 # Базовая схема для промежуточной модели
 class ProductDealerKeyBase(BaseModel):
     product_id: int
     dealer_id: int
     serial_number: int
+
 
 # Схема чтения промежуточной модели
 class ProductDealerKey(ProductDealerKeyBase):
@@ -79,5 +81,3 @@ class ProductDealerKey(ProductDealerKeyBase):
 # Схема записи промежуточной модели
 class ProductDealerKeyCreate(ProductDealerKeyBase):
     pass
-
-

@@ -1,9 +1,9 @@
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload, selectinload
 from . import models, schemas
 from .enum import AllowStatus
 from datetime import datetime
+
 
 # CRUD для Дилера
 # Получение Дилера
@@ -79,7 +79,7 @@ async def get_dealers_prices(db: AsyncSession, dealer_name: str,
 async def get_dealer_price(db: AsyncSession, price_id: int):
     results = await db.execute(
         select(
-            models.DealerPrice   
+            models.DealerPrice
         ).filter(
             models.DealerPrice.id == price_id
         )
@@ -88,7 +88,8 @@ async def get_dealer_price(db: AsyncSession, price_id: int):
 
 
 # Запись продукта Дилера в БД
-async def create_dealer_price(db: AsyncSession, dealer_price: schemas.DealerPrice):
+async def create_dealer_price(db: AsyncSession,
+                              dealer_price: schemas.DealerPrice):
     db_dealer_price = models.DealerPrice(**dealer_price.model_dump())
     db.add(db_dealer_price)
     await db.commit()
@@ -98,7 +99,8 @@ async def create_dealer_price(db: AsyncSession, dealer_price: schemas.DealerPric
 # ## CRUD для связи продуктов
 
 async def create_relation_products(db: AsyncSession, dealer_product_id: int,
-                                   company_product_id: schemas.ProductDealerKeyCreate,
+                                   company_product_id:
+                                   schemas.ProductDealerKeyCreate,
                                    serial_number: int,
                                    status: AllowStatus):
     print(serial_number)
@@ -129,9 +131,14 @@ async def get_relation_products(db: AsyncSession):
     return results.unique().scalars().all()
 
 
-async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, status: AllowStatus, company_product_id = None, serial_number: int = None):
+async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int,
+                                    status: AllowStatus,
+                                    company_product_id = None,
+                                    serial_number: int = None):
     if status is AllowStatus.markup:
-        result = await create_relation_products(db, dealer_product_id, company_product_id, serial_number, status)
+        result = await create_relation_products(db, dealer_product_id,
+                                                company_product_id,
+                                                serial_number, status)
     else:
         stmt = (
             update(

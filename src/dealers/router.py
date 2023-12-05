@@ -46,12 +46,19 @@ async def get_dealer_product(product_id: int,
 async def status_dealer_product(
                           dealer_product_id: int,
                           status: AllowStatus,
-                          company_product_id: Annotated[int, Body(embed=True)] = None,
-                          serial_number: Annotated[int, Body(embed=True)] = None,
+                          company_product_id:
+                          Annotated[int, Body(embed=True)] = None,
+                          serial_number:
+                          Annotated[int, Body(embed=True)] = None,
                           db: AsyncSession = Depends(get_async_session)):
-    if status is AllowStatus.markup and not (serial_number and company_product_id):
-        raise HTTPException(status_code=400, detail='Для разметки необходимо передать company_product_id и serial_number')
-    await utils.set_status_dealer_product(db, dealer_product_id, status, company_product_id, serial_number)
+    if status is AllowStatus.markup and not (
+         serial_number and company_product_id
+         ):
+        raise HTTPException(status_code=400,
+                            detail='Для разметки необходимо передать '
+                            'company_product_id и serial_number')
+    await utils.set_status_dealer_product(db, dealer_product_id, status,
+                                          company_product_id, serial_number)
     return await utils.get_dealer_price(db, dealer_product_id)
 
 

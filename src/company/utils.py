@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from . import models, schemas
 from ..dealers.models import Dealer, DealerPrice
 
+
 # Получение продуктов Компании
 async def get_company_products(db: AsyncSession, limit: int):
     stmt = select(models.Product)
@@ -40,7 +41,8 @@ async def create_company_product(db: AsyncSession,
 async def send_request_ml_matching(dealer_product_name: str):
     async with ClientSession() as session:
         payload = {'name_dealer_product': dealer_product_name}
-        async with session.post('http://localhost:8001/machine-matching', json=payload) as response:
+        async with session.post('http://localhost:8001/machine-matching',
+                                json=payload) as response:
             product_ids = await response.json()
             return product_ids
 
@@ -54,52 +56,55 @@ async def get_dealer_products(db: AsyncSession, dealer_ids: List[int]):
 
 
 async def load_csv(db: AsyncSession):
-    async with aiofiles.open('D:/Develop/project_backend/csv/marketing_product.csv', mode='r', newline='', encoding='UTF-8') as file:
+    async with aiofiles.open(
+        './csv/marketing_product.csv', mode='r', newline='', encoding='UTF-8'
+         ) as file:
         content = await file.read()
         content = content.replace('\r\n', '\n')
         reader = csv.DictReader(content.splitlines(), delimiter=";")
         for row in reader:
-            # not_exist = await db.execute(select(models.Product).filter(models.Product.id == int(row['id'])))
-            # if not not_exist:
-                record = models.Product(
-                    id=int(row['id']),
-                    article=row['article'],
-                    ean_13=row['ean_13'],
-                    name=row['name'],
-                    cost=float(row['cost']) if row['cost'] != '' else None,
-                    recommended_price=float(row['recommended_price']) if row['recommended_price'] != '' else None,
-                    category_id=float(row['category_id']) if row['category_id'] != '' else None,
-                    ozon_name=row['ozon_name'],
-                    name_1c=row['name_1c'],
-                    wb_name=row['wb_name'],
-                    ozon_article=row['ozon_article'],
-                    wb_article=row['wb_article'],
-                    ym_article=row['ym_article'],
-                    wb_article_td=row['wb_article_td']
+            record = models.Product(
+                id=int(row['id']),
+                article=row['article'],
+                ean_13=row['ean_13'],
+                name=row['name'],
+                cost=float(row['cost']) if row['cost'] != '' else None,
+                recommended_price=float(row['recommended_price'])
+                if row['recommended_price'] != '' else None,
+                category_id=float(row['category_id'])
+                if row['category_id'] != '' else None,
+                ozon_name=row['ozon_name'],
+                name_1c=row['name_1c'],
+                wb_name=row['wb_name'],
+                ozon_article=row['ozon_article'],
+                wb_article=row['wb_article'],
+                ym_article=row['ym_article'],
+                wb_article_td=row['wb_article_td']
                 )
-                db.add(record)
+            db.add(record)
         await db.commit()
-    async with aiofiles.open('D:/Develop/project_backend/csv/marketing_dealer.csv', mode='r', newline='', encoding='UTF-8') as file:
+    async with aiofiles.open(
+         './csv/marketing_dealer.csv', mode='r', newline='', encoding='UTF-8'
+         ) as file:
         content = await file.read()
         content = content.replace('\r\n', '\n')
         reader = csv.DictReader(content.splitlines(), delimiter=';')
         for row in reader:
-            # not_exist = await db.execute(select(Dealer).filter(Dealer.id == int(row['id'])))
-            # if not not_exist:
-                record = Dealer(
+            record = Dealer(
                     id=int(row['id']),
                     name=row['name']
                 )
-                db.add(record)
+            db.add(record)
         await db.commit()
-    async with aiofiles.open('D:/Develop/project_backend/csv/marketing_dealerprice.csv', mode='r', newline='', encoding='UTF-8') as file:
+    async with aiofiles.open(
+        './csv/marketing_dealerprice.csv',
+        mode='r', newline='', encoding='UTF-8'
+         ) as file:
         content = await file.read()
         content = content.replace('\r\n', '\n')
         reader = csv.DictReader(content.splitlines(), delimiter=';')
         for row in reader:
-            # not_exist = await db.execute(select(DealerPrice).filter(DealerPrice.id == int(row['id'])))
-            # if not not_exist:
-                record = DealerPrice(
+            record = DealerPrice(
                     id=int(row['id']),
                     product_key=str(row['product_key']),
                     product_name=row['product_name'],
@@ -107,6 +112,6 @@ async def load_csv(db: AsyncSession):
                     product_url=row['product_url'],
                     date=row['date'],
                     dealer_id=int(row['dealer_id'])
-                )
-                db.add(record)
+            )
+            db.add(record)
         await db.commit()

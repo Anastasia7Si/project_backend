@@ -31,3 +31,6 @@ pytest_tornasync==0.6.0.post2
 pytest_trio==0.8.0
 pytest_twisted==1.14.0
 twisted==23.10.0
+aiofiles==23.2.1
+aiohttp==3.9.1
+fastapi_users==12.1.2
