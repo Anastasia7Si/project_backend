@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
@@ -46,13 +46,12 @@ async def get_dealer_product(product_id: int,
 async def status_dealer_product(
                           dealer_product_id: int,
                           status: AllowStatus,
-                          keys: schemas.ProductDealerKeyCreate | None = None,
+                          company_product_id: Annotated[int, Body(embed=True)] = None,
+                          serial_number: Annotated[int, Body(embed=True)] = None,
                           db: AsyncSession = Depends(get_async_session)):
-    if status is AllowStatus.markup and not keys:
-        raise HTTPException(status_code=400,
-                            detail='Для разметки необходимы ключ дилера'
-                                   ' и продукта компании')
-    await utils.set_status_dealer_product(db, dealer_product_id, status, keys)
+    if status is AllowStatus.markup and not (serial_number and company_product_id):
+        raise HTTPException(status_code=400, detail='Для разметки необходимо передать company_product_id и serial_number')
+    await utils.set_status_dealer_product(db, dealer_product_id, status, company_product_id, serial_number)
     return await utils.get_dealer_price(db, dealer_product_id)
 
 
@@ -79,7 +78,8 @@ async def get_dealers(db: AsyncSession = Depends(get_async_session),
 # Получение обьекта промежуточной модели
 @router.get('/dealerprice/', response_model=List[schemas.ProductDealerKey])
 async def get_relation_products(db: AsyncSession = Depends(get_async_session)):
-    return await utils.get_relation_products(db)
+    result = await utils.get_relation_products(db)
+    return result
 
 
 # Эндпоинт для получения 1 Дилера

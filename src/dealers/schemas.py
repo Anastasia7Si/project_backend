@@ -1,17 +1,17 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from ..company.schemas import Product
 from .enum import AllowStatus
+
 # ## Схемы продуктов Дилера
 
 
 # Базовая схема продукта Дилера
 class DealerPriceBase(BaseModel):
-    product_key: int
-    price: float = Field(gt=0)
+    product_key: str
+    price: float
     product_url: str
     product_name: str
     date: str
@@ -21,6 +21,9 @@ class DealerPriceBase(BaseModel):
 # Схема чтения продукта Дилера
 class DealerPrice(DealerPriceBase):
     status: AllowStatus | None = None
+    product_id: int | None
+    serial_number: int | None
+    date_status: datetime | None
     id: int
 
     class Config:
@@ -58,7 +61,7 @@ class DealerCreate(DealerBase):
 class ProductDealerKeyBase(BaseModel):
     product_id: int
     dealer_id: int
-
+    serial_number: int
 
 # Схема чтения промежуточной модели
 class ProductDealerKey(ProductDealerKeyBase):
@@ -66,8 +69,8 @@ class ProductDealerKey(ProductDealerKeyBase):
     date_markup: datetime
     id: int
 
-    product: Product
-    dealer: Dealer
+    product: int
+    dealer: int
 
     class Config:
         orm_mode = True
@@ -76,3 +79,5 @@ class ProductDealerKey(ProductDealerKeyBase):
 # Схема записи промежуточной модели
 class ProductDealerKeyCreate(ProductDealerKeyBase):
     pass
+
+
