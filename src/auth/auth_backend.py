@@ -1,4 +1,5 @@
-from fastapi_users.authentication import JWTStrategy, CookieTransport, AuthenticationBackend
+from fastapi_users.authentication import (JWTStrategy, CookieTransport,
+                                          AuthenticationBackend)
 
 
 cookie_transport = CookieTransport(cookie_name='prosept', cookie_max_age=3600)
