@@ -1,9 +1,9 @@
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload, selectinload
 from . import models, schemas
 from .enum import AllowStatus
-
-
+from datetime import datetime
 
 # CRUD для Дилера
 # Получение Дилера
@@ -97,14 +97,27 @@ async def create_dealer_price(db: AsyncSession, dealer_price: schemas.DealerPric
 
 # ## CRUD для связи продуктов
 
-async def create_relation_products(db: AsyncSession, product_id: int,
-                                   product_key: schemas.ProductDealerKeyCreate):
-    product_relation = models.ProductDealerKey(
-        key=product_id, **product_key.model_dump()
+async def create_relation_products(db: AsyncSession, dealer_product_id: int,
+                                   company_product_id: schemas.ProductDealerKeyCreate,
+                                   serial_number: int,
+                                   status: AllowStatus):
+    print(serial_number)
+    stmt = (
+        update(
+            models.DealerPrice
+        ).where(
+            models.DealerPrice.id == dealer_product_id
+        ).values(
+            product_id = company_product_id,
+            serial_number = serial_number,
+            status = status.value,
+            date_status = datetime.utcnow()
+        ).returning(
+            models.DealerPrice
+        )
     )
-    db.add(product_relation)
-    await db.commit()
-    return product_relation
+    result = await db.execute(stmt)
+    return result
 
 
 async def get_relation_products(db: AsyncSession):
@@ -116,20 +129,24 @@ async def get_relation_products(db: AsyncSession):
     return results.unique().scalars().all()
 
 
-async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, status: AllowStatus, keys: schemas.ProductDealerKeyCreate = None):
+async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, status: AllowStatus, company_product_id = None, serial_number: int = None):
     if status is AllowStatus.markup:
-        await create_relation_products(db, dealer_product_id, keys)
-    stmt = (
-        update(
-            models.DealerPrice
-        ).where(
-            models.DealerPrice.id == dealer_product_id
-        ).values(
-            status = status.value
-        ).returning(
-            models.DealerPrice
+        result = await create_relation_products(db, dealer_product_id, company_product_id, serial_number, status)
+    else:
+        stmt = (
+            update(
+                models.DealerPrice
+            ).where(
+                models.DealerPrice.id == dealer_product_id
+            ).values(
+                status = status.value,
+                product_id = None,
+                serial_number = None,
+                date_status = datetime.utcnow()
+            ).returning(
+                models.DealerPrice
+            )
         )
-    )
-    result = await db.execute(stmt)
+        result = await db.execute(stmt)
     await db.commit()
     return result.first()

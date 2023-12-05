@@ -1,6 +1,6 @@
-from sqlalchemy import (Column, Float, Integer,
-                        String)
-
+from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy.orm import relationship
+from ..dealers.models import ProductDealerKey
 
 from ..database import Base
 
@@ -20,5 +20,8 @@ class Product(Base):
     name_1c = Column(String(150), nullable=True)
     wb_name = Column(String(150), nullable=True)
     ozon_article = Column(String(30), nullable=True)
+    wb_article = Column(String, nullable=True)
     wb_article_td = Column(String(30), nullable=True)
     ym_article = Column(String(30), nullable=True)
+
+    dealer_products = relationship('DealerPrice', lazy='joined')
