@@ -22,7 +22,8 @@ async def get_dealers_products(db: AsyncSession = Depends(get_async_session),
                                dealer_name: str = None,
                                status: AllowStatus = None,
                                limit: int = None,):
-    db_products_dealers = await utils.get_dealers_prices(db, dealer_name, status, limit)
+    db_products_dealers = await utils.get_dealers_prices(db, dealer_name,
+                                                         status, limit)
     if db_products_dealers is None:
         raise HTTPException(status_code=404, detail='Not found')
     return db_products_dealers
@@ -48,7 +49,9 @@ async def status_dealer_product(
                           keys: schemas.ProductDealerKeyCreate | None = None,
                           db: AsyncSession = Depends(get_async_session)):
     if status is AllowStatus.markup and not keys:
-        raise HTTPException(status_code=400, detail='Для разметки необходимы ключ дилера и продукта компании')
+        raise HTTPException(status_code=400,
+                            detail='Для разметки необходимы ключ дилера'
+                                   ' и продукта компании')
     await utils.set_status_dealer_product(db, dealer_product_id, status, keys)
     return await utils.get_dealer_price(db, dealer_product_id)
 
