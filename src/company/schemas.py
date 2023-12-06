@@ -7,7 +7,7 @@ class ProductBase(BaseModel):
     article: str
     ean_13: str | None
     name: str | None
-    cost: float | None 
+    cost: float | None
     recommended_price: float | None
     category_id: float | None
     ozon_name: str | None

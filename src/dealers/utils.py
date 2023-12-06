@@ -25,6 +25,7 @@ async def get_dealers(db: AsyncSession, limit: int):
 
 # ## CRUD для продуктов Дилера
 
+
 # Получение продуктов Дилеров
 async def get_dealers_prices(db: AsyncSession, dealer_name: str,
                              status: AllowStatus,  limit: int):
@@ -70,7 +71,7 @@ async def get_dealers_prices(db: AsyncSession, dealer_name: str,
 async def get_dealer_price(db: AsyncSession, price_id: int):
     results = await db.execute(
         select(
-            models.DealerPrice   
+            models.DealerPrice
         ).filter(
             models.DealerPrice.id == price_id
         )
@@ -78,6 +79,7 @@ async def get_dealer_price(db: AsyncSession, price_id: int):
     return results.unique().scalars().first()
 
 # ## CRUD для связи продуктов
+
 
 async def create_relation_products(db: AsyncSession, dealer_product_id: int,
                                    company_product_id: int,
@@ -101,9 +103,23 @@ async def create_relation_products(db: AsyncSession, dealer_product_id: int,
     return result
 
 
-async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, status: AllowStatus, company_product_id = None, serial_number: int = None):
+async def get_relation_products(db: AsyncSession):
+    results = await db.execute(
+        select(
+            models.ProductDealerKey
+        )
+    )
+    return results.unique().scalars().all()
+
+
+async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int,
+                                    status: AllowStatus,
+                                    company_product_id = None,
+                                    serial_number: int = None):
     if status is AllowStatus.markup:
-        result = await create_relation_products(db, dealer_product_id, company_product_id, serial_number, status)
+        result = await create_relation_products(db, dealer_product_id,
+                                                company_product_id,
+                                                serial_number, status)
     else:
         stmt = (
             update(
