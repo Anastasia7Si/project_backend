@@ -56,7 +56,6 @@ pip install -r requirements.txt
 - Создать и применить миграции:
 ```
 alembic revision --autogenerate -m "migration"
-```
 alembic upgrade head
 ```
 - Запустить проект:
