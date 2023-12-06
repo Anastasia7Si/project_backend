@@ -25,6 +25,7 @@ async def get_dealers(db: AsyncSession, limit: int):
 
 # ## CRUD для продуктов Дилера
 
+
 # Получение продуктов Дилеров
 async def get_dealers_prices(db: AsyncSession, dealer_name: str,
                              status: AllowStatus,  limit: int):
@@ -79,6 +80,7 @@ async def get_dealer_price(db: AsyncSession, price_id: int):
 
 # ## CRUD для связи продуктов
 
+
 async def create_relation_products(db: AsyncSession, dealer_product_id: int,
                                    company_product_id:
                                    schemas.ProductDealerKeyCreate,
@@ -112,7 +114,10 @@ async def get_relation_products(db: AsyncSession):
     return results.unique().scalars().all()
 
 
-async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, status: AllowStatus, company_product_id = None, serial_number: int = None):
+async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int,
+                                    status: AllowStatus,
+                                    company_product_id = None,
+                                    serial_number: int = None):
     if status is AllowStatus.markup:
         result = await create_relation_products(db, dealer_product_id,
                                                 company_product_id,

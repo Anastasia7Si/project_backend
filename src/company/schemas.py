@@ -34,6 +34,7 @@ class ProductShort(BaseModel):
     article: str
     name_1c: str | None
 
+
 # Схема записи продукта компании
 class ProductCreate(ProductBase):
     pass

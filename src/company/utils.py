@@ -5,7 +5,7 @@ import aiofiles
 from aiohttp import ClientSession
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from . import models, schemas
+from . import models
 from ..dealers.models import Dealer, DealerPrice
 
 
@@ -48,7 +48,7 @@ async def get_dealer_products(db: AsyncSession, dealer_ids: List[int]):
 
 async def load_csv(db: AsyncSession):
     async with aiofiles.open(
-        '/csv/marketing_product.csv',
+        '/app/csv/marketing_product.csv',
         mode='r', newline='', encoding='UTF-8'
          ) as file:
         content = await file.read()
@@ -76,7 +76,8 @@ async def load_csv(db: AsyncSession):
             db.add(record)
         await db.commit()
     async with aiofiles.open(
-         '/csv/marketing_dealer.csv', mode='r', newline='', encoding='UTF-8'
+         '/app/csv/marketing_dealer.csv',
+         mode='r', newline='', encoding='UTF-8'
          ) as file:
         content = await file.read()
         content = content.replace('\r\n', '\n')
@@ -89,7 +90,7 @@ async def load_csv(db: AsyncSession):
             db.add(record)
         await db.commit()
     async with aiofiles.open(
-        '/csv/marketing_dealerprice.csv',
+        '/app//csv/marketing_dealerprice.csv',
         mode='r', newline='', encoding='UTF-8'
          ) as file:
         content = await file.read()

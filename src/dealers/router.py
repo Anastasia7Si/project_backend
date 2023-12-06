@@ -63,6 +63,7 @@ async def status_dealer_product(
 
 # ## Дилер
 
+
 # Эндпоинт для получения списка Дилеров
 @router.get('/', response_model=List[schemas.Dealer])
 async def get_dealers(db: AsyncSession = Depends(get_async_session),
