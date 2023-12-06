@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from typing import List
-# ## Схемы продукта Компании
+
 from ..dealers.schemas import DealerPrice
+
 
 # Базовая схема продукта Компании
 class ProductBase(BaseModel):
@@ -27,6 +28,11 @@ class Product(ProductBase):
     class Config:
         orm_mode = True
 
+
+class ProductShort(BaseModel):
+    id: int
+    article: str
+    name_1c: str | None
 
 # Схема записи продукта компании
 class ProductCreate(ProductBase):

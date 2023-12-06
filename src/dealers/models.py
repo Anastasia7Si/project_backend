@@ -36,18 +36,3 @@ class DealerPrice(Base):
 
     product = relationship('Product', lazy='joined')
     dealer = relationship('Dealer', lazy='joined')
-
-
-# Модель соответствия продуктов
-class ProductDealerKey(Base):
-    __tablename__ = 'marketing_productdealerkey'
-
-    id = Column(Integer, primary_key=True)
-    date_markup = Column(TIMESTAMP, nullable=False, default=datetime.utcnow)
-    key = Column(Integer, ForeignKey('marketing_dealerprice.id'))
-    product_id = Column(Integer, ForeignKey('marketing_product.id'))
-    dealer_id = Column(Integer, ForeignKey('marketing_dealer.id'))
-    serial_number = Column(Integer, nullable=True)
-
-
-
