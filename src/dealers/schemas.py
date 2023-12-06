@@ -54,30 +54,3 @@ class Dealer(DealerBase):
 # Схема записи Дилера
 class DealerCreate(DealerBase):
     pass
-
-# ##Схемы промежуточной таблицы связи продуктов
-
-
-# Базовая схема для промежуточной модели
-class ProductDealerKeyBase(BaseModel):
-    product_id: int
-    dealer_id: int
-    serial_number: int
-
-
-# Схема чтения промежуточной модели
-class ProductDealerKey(ProductDealerKeyBase):
-    key: int
-    date_markup: datetime
-    id: int
-
-    product: int
-    dealer: int
-
-    class Config:
-        orm_mode = True
-
-
-# Схема записи промежуточной модели
-class ProductDealerKeyCreate(ProductDealerKeyBase):
-    pass

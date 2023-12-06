@@ -29,15 +29,6 @@ async def get_company_product(db: AsyncSession, product_id: int):
     return result.scalars().first()
 
 
-# Запись продукта Компании
-async def create_company_product(db: AsyncSession,
-                                 product: schemas.ProductCreate):
-    company_product = models.Product(**product.model_dump())
-    db.add(company_product)
-    await db.commit()
-    return company_product
-
-
 async def send_request_ml_matching(dealer_product_name: str):
     async with ClientSession() as session:
         payload = {'name_dealer_product': dealer_product_name}

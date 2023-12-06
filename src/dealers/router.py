@@ -61,15 +61,6 @@ async def status_dealer_product(
                                           company_product_id, serial_number)
     return await utils.get_dealer_price(db, dealer_product_id)
 
-
-# Эндпоинт записи продукта Дилера
-@router.post('/products/',
-             response_model=schemas.DealerPrice)
-async def create_dealer_product(dealer_product: schemas.DealerPriceCreate,
-                                db: AsyncSession = Depends(get_async_session)):
-    return await utils.create_dealer_price(db, dealer_product)
-
-
 # ## Дилер
 
 # Эндпоинт для получения списка Дилеров
@@ -82,13 +73,6 @@ async def get_dealers(db: AsyncSession = Depends(get_async_session),
     return db_dealers
 
 
-# Получение обьекта промежуточной модели
-@router.get('/dealerprice/', response_model=List[schemas.ProductDealerKey])
-async def get_relation_products(db: AsyncSession = Depends(get_async_session)):
-    result = await utils.get_relation_products(db)
-    return result
-
-
 # Эндпоинт для получения 1 Дилера
 @router.get('/{dealer_id}/',
             response_model=schemas.Dealer)
@@ -98,10 +82,3 @@ async def get_dealer(dealer_id: int,
     if db_dealer is None:
         raise HTTPException(status_code=404, detail='Not found')
     return db_dealer
-
-
-# Эндпоинт для записи Дилера в БД
-@router.post('/', response_model=schemas.Dealer)
-async def create_dealer(dealer: schemas.DealerCreate,
-                        db: AsyncSession = Depends(get_async_session)):
-    return await utils.create_dealer(db, dealer)
