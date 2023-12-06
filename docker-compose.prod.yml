@@ -6,17 +6,16 @@ services:
     restart: always
     env_file: .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - backend-network
 
   ds_ml:
-    image: anasti97/backend
+    image: bar2les/prosept_competition_2023
     restart: always
-    env_file: .env
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     networks:
       - backend-network
 
@@ -47,7 +46,7 @@ services:
     volumes:
       - db_postgresql:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -d db_dealer -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
