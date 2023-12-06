@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from .enum import AllowStatus
-
+from ..company.schemas import ProductForDealer
 # ## Схемы продуктов Дилера
 
 
@@ -22,6 +22,7 @@ class DealerPriceBase(BaseModel):
 class DealerPrice(DealerPriceBase):
     status: AllowStatus | None = None
     product_id: int | None
+    product: ProductForDealer | None
     serial_number: int | None
     date_status: datetime | None
     id: int
