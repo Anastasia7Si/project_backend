@@ -80,10 +80,9 @@ async def get_dealer_price(db: AsyncSession, price_id: int):
 # ## CRUD для связи продуктов
 
 async def create_relation_products(db: AsyncSession, dealer_product_id: int,
-                                   company_product_id: schemas.ProductDealerKeyCreate,
+                                   company_product_id: int,
                                    serial_number: int,
                                    status: AllowStatus):
-    print(serial_number)
     stmt = (
         update(
             models.DealerPrice

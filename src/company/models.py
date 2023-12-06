@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Float, Integer, String
 from sqlalchemy.orm import relationship
-from ..dealers.models import ProductDealerKey
 
 from ..database import Base
 
