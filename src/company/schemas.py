@@ -21,7 +21,6 @@ class ProductBase(BaseModel):
 # Схема чтения продукта Компании
 class Product(ProductBase):
     id: int
-    dealer_products: List[int] | None
 
     class Config:
         orm_mode = True
