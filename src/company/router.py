@@ -21,7 +21,7 @@ router = APIRouter(
 async def matching_matching(dealer_product_id: int,
                             db: AsyncSession = Depends(get_async_session)):
     dealer_product = await get_dealer_price(db, dealer_product_id)
-    dealer_product_ids = await utils.send_request_ml_matching(
+    dealer_product_ids = utils.send_request_ml_matching(
         dealer_product.product_name
         )
     company_products = await utils.get_dealer_products(db, dealer_product_ids)

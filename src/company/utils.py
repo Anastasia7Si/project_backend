@@ -1,8 +1,8 @@
 import csv
+import requests
 from typing import List
 
 import aiofiles
-from aiohttp import ClientSession
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from . import models
@@ -29,13 +29,12 @@ async def get_company_product(db: AsyncSession, product_id: int):
     return result.scalars().first()
 
 
-async def send_request_ml_matching(dealer_product_name: str):
-    async with ClientSession() as session:
-        payload = {'name_dealer_product': dealer_product_name}
-        async with session.post('http://ds_ml:8001/machine-matching',
-                                json=payload) as response:
-            product_ids = await response.json()
-            return product_ids
+def send_request_ml_matching(dealer_product_name: str):
+    payload = {'name_dealer_product': dealer_product_name}
+    response = requests.post('http://ds_ml:8001/machine-matching',
+                             json=payload)
+    product_ids = response.json()
+    return product_ids
 
 
 async def get_dealer_products(db: AsyncSession, dealer_ids: List[int]):
