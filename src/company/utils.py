@@ -32,7 +32,7 @@ async def get_company_product(db: AsyncSession, product_id: int):
 async def send_request_ml_matching(dealer_product_name: str):
     async with ClientSession() as session:
         payload = {'name_dealer_product': dealer_product_name}
-        async with session.post('http://localhost:8001/machine-matching',
+        async with session.post('http://ds_ml:8001/machine-matching',
                                 json=payload) as response:
             product_ids = await response.json()
             return product_ids
