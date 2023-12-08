@@ -1,9 +1,9 @@
 from pydantic import BaseModel
-from typing import List
 
 
-# Базовая схема продукта Компании
 class ProductBase(BaseModel):
+    """Базовая схема продукта Компании."""
+
     article: str
     ean_13: str | None
     name: str | None

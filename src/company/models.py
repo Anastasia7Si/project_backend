@@ -4,8 +4,9 @@ from sqlalchemy.orm import relationship
 from ..database import Base
 
 
-# Модель продукта Компании
 class Product(Base):
+    """"Модель продукта Компании."""
+
     __tablename__ = 'marketing_product'
 
     id = Column(Integer, primary_key=True)
