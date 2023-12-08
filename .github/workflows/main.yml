@@ -1,0 +1,72 @@
+name: Main Matching workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip 
+        pip install flake8
+        pip install -r .requirements.txt 
+    - name: Test code with flake8
+      run: |
+        python -m flake8
+
+  build_and_push_to_docker_hub:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker 
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push backend to DockerHub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: anasti1897/project_backend:latest
+      - name: Push frontend to DockerHub
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          push: true
+          tags: anasti1897/project_frontend:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: 
+      - build_and_push_to_docker_hub
+    steps:
+    - name: Executing remote ssh commands to deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        script: |
+          cd foodgram/
+          sudo docker pull anasti97/foodgram_frontend
+          sudo docker pull anasti97/foodgram_backend
+          sudo docker-compose stop
+          sudo docker-compose rm backend
+          sudo docker-compose up -d --build
