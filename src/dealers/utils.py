@@ -9,6 +9,8 @@ from .enum import AllowStatus
 
 async def get_dealer(db: AsyncSession,
                      dealer_id: int):
+    """Функция получения Дилера."""
+
     stmt = select(
         models.Dealer
     ).filter(
@@ -20,12 +22,12 @@ async def get_dealer(db: AsyncSession,
 
 async def get_dealers(db: AsyncSession,
                       limit: int):
+    """Функция получения Дилеров."""
+
     stmt = select(
-        select(
-            models.Dealer
-        ).limit(
-            limit
-        )
+        models.Dealer
+    ).limit(
+        limit
     )
     results = await db.execute(stmt)
     return results.unique().scalars().all()
@@ -35,6 +37,8 @@ async def prices_by_name_and_status(db: AsyncSession,
                                     dealer_name: str,
                                     status: AllowStatus,
                                     limit: int):
+    """Функция получения продуктов Дилера по статусу и имени."""
+
     stmt = select(
         models.DealerPrice
     ).join(
@@ -50,6 +54,8 @@ async def prices_by_name_and_status(db: AsyncSession,
 async def prices_by_name(db: AsyncSession,
                          dealer_name: str,
                          limit: str):
+    """Функция получения продуктов Дилера по статусу."""
+
     stmt = select(
         models.DealerPrice
     ).join(
@@ -64,6 +70,8 @@ async def prices_by_name(db: AsyncSession,
 async def prices_by_status(db: AsyncSession,
                            status: AllowStatus,
                            limit: int):
+    """Функция получения продуктов Дилера по статусу."""
+
     stmt = select(
         models.DealerPrice
     ).join(
@@ -77,6 +85,8 @@ async def prices_by_status(db: AsyncSession,
 
 async def get_dealers_prices(db: AsyncSession, dealer_name: str,
                              status: AllowStatus, limit: int):
+    """Функция получения продуктов Дилера."""
+
     if dealer_name and status:
         return await prices_by_name_and_status(
             db,
@@ -105,6 +115,8 @@ async def get_dealers_prices(db: AsyncSession, dealer_name: str,
 
 async def get_dealer_price(db: AsyncSession,
                            price_id: int):
+    """Функция получения продуктов Дилера по id."""
+
     results = await db.execute(
         select(
             models.DealerPrice
@@ -120,6 +132,8 @@ async def set_markup_products(db: AsyncSession,
                               company_product_id: int,
                               serial_number: int,
                               status: AllowStatus):
+    """Функция изменения продуктов Дилера по статусу."""
+
     stmt = (
         update(
             models.DealerPrice
@@ -143,6 +157,8 @@ async def set_status_dealer_product(db: AsyncSession,
                                     status: AllowStatus,
                                     company_product_id: int,
                                     serial_number: int):
+    """Функция изменения продуктов Дилера."""
+
     if status is AllowStatus.markup:
         result = await set_markup_products(
             db,

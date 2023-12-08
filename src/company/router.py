@@ -23,13 +23,15 @@ async def matching_matching(
     dealer_product_id: int,
     db: AsyncSession = Depends(get_async_session)
 ):
+    """Эндпоинт запроса к ML."""
+
     dealer_product = await get_dealer_price(
         db, dealer_product_id
     )
     dealer_product_ids = utils.send_request_ml_matching(
         dealer_product.product_name
     )
-    company_products = await utils.get_company_products(
+    company_products = await utils.get_matching_company_products(
         db, dealer_product_ids
     )
     return company_products
@@ -44,7 +46,9 @@ async def get_company_products(
     db: AsyncSession = Depends(get_async_session),
     limit: int = None
 ):
-    company_products = await utils.get_matching_company_products(
+    """Эндпоинт получения продуктов Компании."""
+
+    company_products = await utils.get_company_products(
         db, limit
     )
     if not company_products:
@@ -61,17 +65,11 @@ async def get_one_company_product(
     product_id: int,
     db: AsyncSession = Depends(get_async_session)
 ):
+    """Эндпоинт получения продукта Компании."""
+
     company_product = await utils.get_company_product(
         db, product_id
     )
     if not company_product:
         raise NoProductException(id=product_id)
     return company_product
-
-
-@router.get('/load_csv/')
-async def load_csv(db: AsyncSession = Depends(get_async_session)):
-    """Эндпоинт для загрузки файлов в базу данных."""
-
-    await utils.load_csv(db)
-    return {"detail": "Загружено!"}

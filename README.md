@@ -76,7 +76,10 @@ uvicorn src.main:app
 ```
 
 ### Для запуска контейнеров (доступ по http://localhost:80/)
-
+- Перейти в папку infra/ :
+```
+cd infra/
+```
 - Запустить сборку  проекта:
 ```
 docker-compose up -d

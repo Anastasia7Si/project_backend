@@ -8,6 +8,8 @@ from .enum import AllowStatus
 
 
 class DealerPriceBase(BaseModel):
+    """Базовая схема продукта Дилера."""
+
     product_key: str
     price: float
     product_url: str
@@ -17,6 +19,8 @@ class DealerPriceBase(BaseModel):
 
 
 class DealerPrice(DealerPriceBase):
+    """Схема продукта Дилера."""
+
     status: AllowStatus | None = None
     product_id: int | None
     product: ProductForDealer | None
@@ -29,11 +33,15 @@ class DealerPrice(DealerPriceBase):
 
 
 class DealerBase(BaseModel):
+    """Базовая схема Дилера."""
+
     name: str
     dealer_product: Optional[List[DealerPrice]] = []
 
 
 class Dealer(DealerBase):
+    """Схема продукта Дилера."""
+
     id: int
 
     class Config:

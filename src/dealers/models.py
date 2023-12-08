@@ -6,6 +6,8 @@ from ..database import Base
 
 
 class Dealer(Base):
+    """Модель дилеров."""
+
     __tablename__ = 'marketing_dealer'
 
     id = Column(
@@ -23,6 +25,8 @@ class Dealer(Base):
 
 
 class DealerPrice(Base):
+    """Модель продуктов дилеров."""
+
     __tablename__ = 'marketing_dealerprice'
 
     id = Column(

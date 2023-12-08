@@ -26,6 +26,8 @@ async def get_dealers_products(
     status: AllowStatus = None,
     limit: int = None
 ):
+    """Эндпоинт получения продуктов Дилеров."""
+
     products_dealers = await utils.get_dealers_prices(
         db,
         dealer_name,
@@ -46,6 +48,8 @@ async def get_dealer_product(
     product_id: int,
     db: AsyncSession = Depends(get_async_session)
 ):
+    """Эндпоинт получения продукта Дилеров."""
+
     dealer_product = await utils.get_dealer_price(
         db, product_id
     )
@@ -66,6 +70,8 @@ async def status_dealer_product(
     serial_number: Annotated[int, Body(embed=True)] = None,
     db: AsyncSession = Depends(get_async_session)
 ):
+    """Эндпоинт изменения статуса разметки продуктов Дилеров."""
+
     if status is AllowStatus.markup and not (
         serial_number and company_product_id
     ):
@@ -90,6 +96,8 @@ async def get_dealers(
     db: AsyncSession = Depends(get_async_session),
     limit: int = None
 ):
+    """Эндпоинт получения Дилеров."""
+
     dealers = await utils.get_dealers(db, limit)
     if not dealers:
         raise NoDealers()
@@ -105,6 +113,8 @@ async def get_dealer(
     dealer_id: int,
     db: AsyncSession = Depends(get_async_session)
 ):
+    """Эндпоинт получения Дилера."""
+
     dealer = await utils.get_dealer(db, dealer_id)
     if not dealer:
         raise NoDealer(id=dealer_id)
