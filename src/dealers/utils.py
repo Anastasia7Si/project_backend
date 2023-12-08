@@ -1,98 +1,135 @@
-from sqlalchemy import select, update
-from sqlalchemy.ext.asyncio import AsyncSession
-from . import models, schemas
-from .enum import AllowStatus
 from datetime import datetime
 
+from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
-# CRUD для Дилера
-# Получение Дилера
-async def get_dealer(db: AsyncSession, dealer_id: int):
-    results = await db.execute(
-        select(
-            models.Dealer
-        ).filter(
-            models.Dealer.id == dealer_id
-        )
+from . import models
+from .enum import AllowStatus
+
+
+async def get_dealer(db: AsyncSession,
+                     dealer_id: int):
+    stmt = select(
+        models.Dealer
+    ).filter(
+        models.Dealer.id == dealer_id
     )
+    results = await db.execute(stmt)
     return results.unique().scalars().first()
 
 
-# Получение списка Дилеров
-async def get_dealers(db: AsyncSession, limit: int):
-    results = await db.execute(select(models.Dealer).limit(limit))
+async def get_dealers(db: AsyncSession,
+                      limit: int):
+    stmt = select(
+        select(
+            models.Dealer
+        ).limit(
+            limit
+        )
+    )
+    results = await db.execute(stmt)
     return results.unique().scalars().all()
 
-# ## CRUD для продуктов Дилера
 
-# Получение продуктов Дилеров
+async def prices_by_name_and_status(db: AsyncSession,
+                                    dealer_name: str,
+                                    status: AllowStatus,
+                                    limit: int):
+    stmt = select(
+        models.DealerPrice
+    ).join(
+        models.Dealer
+    ).filter(
+        models.Dealer.name == dealer_name,
+        models.DealerPrice.status == status.value
+    ).limit(limit)
+    products = await db.execute(stmt)
+    return products.unique().scalars().all()
+
+
+async def prices_by_name(db: AsyncSession,
+                         dealer_name: str,
+                         limit: str):
+    stmt = select(
+        models.DealerPrice
+    ).join(
+        models.Dealer
+    ).filter(
+        models.Dealer.name == dealer_name
+    ).limit(limit)
+    products = await db.execute(stmt)
+    return products.unique().scalars().all()
+
+
+async def prices_by_status(db: AsyncSession,
+                           status: AllowStatus,
+                           limit: int):
+    stmt = select(
+        models.DealerPrice
+    ).join(
+        models.Dealer
+    ).filter(
+        models.DealerPrice.status == status.value
+    ).limit(limit)
+    products = await db.execute(stmt)
+    return products.unique().scalars().all()
+
+
 async def get_dealers_prices(db: AsyncSession, dealer_name: str,
-                             status: AllowStatus,  limit: int):
+                             status: AllowStatus, limit: int):
     if dealer_name and status:
-        results = await db.execute(
-            select(
-                models.DealerPrice
-            ).join(
-                models.Dealer
-            ).filter(
-                models.Dealer.name == dealer_name,
-                models.DealerPrice.status == status.value
-            ).limit(limit)
+        return await prices_by_name_and_status(
+            db,
+            dealer_name,
+            status,
+            limit
         )
-        return results.unique().scalars().all()
     if dealer_name:
-        results = await db.execute(
-            select(
-                models.DealerPrice
-            ).join(
-                models.Dealer
-            ).filter(
-                models.Dealer.name == dealer_name
-            ).limit(limit)
+        return await prices_by_name(
+            db,
+            dealer_name,
+            limit
         )
-        return results.unique().scalars().all()
     if status:
-        results = await db.execute(
-            select(
-                models.DealerPrice
-            ).join(
-                models.Dealer
-            ).filter(
-                models.DealerPrice.status == status.value
-            ).limit(limit)
+        return await prices_by_status(
+            db,
+            status,
+            limit
         )
-        return results.unique().scalars().all()
-    results = await db.execute(select(models.DealerPrice).limit(limit))
+    stmt = select(
+        models.DealerPrice
+    ).limit(limit)
+    results = await db.execute(stmt)
     return results.unique().scalars().all()
 
 
-# Получение продукта Дилера
-async def get_dealer_price(db: AsyncSession, price_id: int):
+async def get_dealer_price(db: AsyncSession,
+                           price_id: int):
     results = await db.execute(
         select(
-            models.DealerPrice   
+            models.DealerPrice
         ).filter(
             models.DealerPrice.id == price_id
         )
     )
     return results.unique().scalars().first()
 
-# ## CRUD для связи продуктов
 
-async def create_relation_products(db: AsyncSession, dealer_product_id: int,
-                                   company_product_id: int,
-                                   serial_number: int,
-                                   status: AllowStatus):
+async def set_markup_products(db: AsyncSession,
+                              dealer_product_id: int,
+                              company_product_id: int,
+                              serial_number: int,
+                              status: AllowStatus):
     stmt = (
         update(
             models.DealerPrice
         ).where(
             models.DealerPrice.id == dealer_product_id
         ).values(
-            product_id = company_product_id,
-            serial_number = serial_number,
-            status = status.value,
-            date_status = datetime.utcnow()
+            product_id=company_product_id,
+            serial_number=serial_number,
+            status=status.value,
+            date_status=datetime.utcnow()
         ).returning(
             models.DealerPrice
         )
@@ -101,9 +138,19 @@ async def create_relation_products(db: AsyncSession, dealer_product_id: int,
     return result
 
 
-async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, status: AllowStatus, company_product_id = None, serial_number: int = None):
+async def set_status_dealer_product(db: AsyncSession,
+                                    dealer_product_id: int,
+                                    status: AllowStatus,
+                                    company_product_id: int,
+                                    serial_number: int):
     if status is AllowStatus.markup:
-        result = await create_relation_products(db, dealer_product_id, company_product_id, serial_number, status)
+        result = await set_markup_products(
+            db,
+            dealer_product_id,
+            company_product_id,
+            serial_number,
+            status
+        )
     else:
         stmt = (
             update(
@@ -111,10 +158,10 @@ async def set_status_dealer_product(db: AsyncSession, dealer_product_id: int, st
             ).where(
                 models.DealerPrice.id == dealer_product_id
             ).values(
-                status = status.value,
-                product_id = None,
-                serial_number = None,
-                date_status = datetime.utcnow()
+                status=status.value,
+                product_id=None,
+                serial_number=None,
+                date_status=datetime.utcnow()
             ).returning(
                 models.DealerPrice
             )

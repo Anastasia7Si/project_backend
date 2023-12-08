@@ -1,13 +1,11 @@
 from pydantic import BaseModel
-from typing import List
 
 
-# Базовая схема продукта Компании
 class ProductBase(BaseModel):
     article: str
     ean_13: str | None
     name: str | None
-    cost: float | None 
+    cost: float | None
     recommended_price: float | None
     category_id: float | None
     ozon_name: str | None
@@ -18,7 +16,6 @@ class ProductBase(BaseModel):
     ym_article: str | None
 
 
-# Схема чтения продукта Компании
 class Product(ProductBase):
     id: int
 
@@ -34,8 +31,3 @@ class ProductShort(BaseModel):
 
 class ProductForDealer(BaseModel):
     name_1c: str
-
-
-# Схема записи продукта компании
-class ProductCreate(ProductBase):
-    pass
