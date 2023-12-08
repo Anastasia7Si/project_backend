@@ -18,7 +18,6 @@ class ProductBase(BaseModel):
     ym_article: str | None
 
 
-# Схема чтения продукта Компании
 class Product(ProductBase):
     id: int
 
@@ -34,8 +33,3 @@ class ProductShort(BaseModel):
 
 class ProductForDealer(BaseModel):
     name_1c: str
-
-
-# Схема записи продукта компании
-class ProductCreate(ProductBase):
-    pass
