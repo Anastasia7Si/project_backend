@@ -2,6 +2,8 @@ from pydantic import BaseModel
 
 
 class ProductBase(BaseModel):
+    """Базовая схема продукта Компании."""
+
     article: str
     ean_13: str | None
     name: str | None

@@ -13,6 +13,4 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 COPY . .
 
-EXPOSE 80
-
 ENTRYPOINT [ "sh", "entrypoint.sh" ]

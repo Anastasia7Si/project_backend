@@ -2,22 +2,16 @@ version: '3.8'
 
 services:
   app:
-    image: anasti97/backend
+    image: anasti97/backend:latest
     restart: always
     env_file: .env
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - backend-network
 
   ds_ml:
-    image: bar2les/prosept_competition_2023
+    image: bar2les/prosept_competition_2023:latest
     restart: always
-    depends_on:
-      - db
-    networks:
-      - backend-network
 
   frontend:
     image: yaroslavpatrikeev/prosept_frontend
@@ -37,6 +31,7 @@ services:
       -  static:/staticfiles
     depends_on:
       - frontend
+      - app
 
   db:
     image: postgres:13-alpine
@@ -50,10 +45,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    depends_on:
+      - ds_ml
 
 volumes:
   db_postgresql:
   static:
-
-networks:
-  backend-network:

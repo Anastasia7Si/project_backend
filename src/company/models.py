@@ -5,6 +5,8 @@ from ..database import Base
 
 
 class Product(Base):
+    """"Модель продукта Компании."""
+
     __tablename__ = 'marketing_product'
 
     id = Column(

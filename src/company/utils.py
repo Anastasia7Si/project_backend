@@ -1,8 +1,10 @@
 import csv
+import requests
 from typing import List
 
 import aiofiles
 import requests
+
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 

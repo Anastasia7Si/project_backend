@@ -8,6 +8,16 @@ Backend для проекта хакатона "Яндекс.Практикум"
 - [Владислав Тарасов](https://github.com/BAR2LEHI)
 - [Анастасия Пушкарная](https://github.com/Anastasia7Si)
 
+<div id="header" align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-F8F8FF?style=for-the-badge&logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/FastAPI-0.104.1-F8F8FF?style=for-the-badge&logo=FastAPI&logoColor=white">
+  <img src="https://img.shields.io/badge/PostgreSQL-555555?style=for-the-badge&logo=postgresql&logoColor=white">
+  <img src="https://img.shields.io/badge/SQLAlchemy-2.0.23-F8F8FF?style=for-the-badge&logo=SQLAlchemy&logoColor=white">
+  <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
+  <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">
+  <img src="https://img.shields.io/badge/Pytest-009639?style=for-the-badge&logo=pytest&logoColor=white">
+</div>
+
 ## Технологии
 
 **Client:** Python 3.11 , Fastapi 0.104, Uvicorn 0.24, SQLAlchemy 2.0, alembic 1.12, python-dotenv 1
@@ -72,7 +82,7 @@ uvicorn src.main:app
 docker-compose up -d
 ```
 
-### Для запуска проекта на сервере (доступ по http://(domen_name):80/)
+### Для запуска проекта на сервере (доступ по http://(domen_name)/)
 
 - Скопировать на сервер файл docker-compose.prod.yml и рядом с ним создать .env файл (по примеру выше).
 
@@ -82,11 +92,11 @@ sudo docker compose -f docker-compose.prod.yml up -d
 ```
 
 ## Запуск тестов
-- 
+- Для запуска тестов необходимо выполнить команду:
 ```
-
+python tests.py
 ```
 ## К проекту подключена документация, в которой можно ознакомиться с эндпоинтами и методами, а также с примерами запросов, ответов и кода:
 ```
-
+http://127.0.0.1:8000/docs/
 ```

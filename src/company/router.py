@@ -71,5 +71,7 @@ async def get_one_company_product(
 
 @router.get('/load_csv/')
 async def load_csv(db: AsyncSession = Depends(get_async_session)):
+    """Эндпоинт для загрузки файлов в базу данных."""
+
     await utils.load_csv(db)
     return {"detail": "Загружено!"}

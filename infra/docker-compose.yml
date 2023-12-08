@@ -2,29 +2,22 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: anasti97/backend:latest
     restart: always
     ports:
      - 8000:8000
-    env_file: .env
+    env_file: ./.env
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - backend-network
 
   ds_ml:
-    image: bar2les/prosept_competition_2023
+    image: bar2les/prosept_competition_2023:latest
     restart: always
     ports:
       - 8001:8001
     depends_on:
       - db
-      - app
-    networks:
-      - backend-network
 
   frontend:
     image: yaroslavpatrikeev/prosept_frontend
@@ -52,7 +45,7 @@ services:
     image: postgres:13-alpine
     ports:
       - 5432:5432
-    env_file: .env
+    env_file: ./.env
     volumes:
       - db_postgresql:/var/lib/postgresql/data
     healthcheck:
@@ -64,6 +57,3 @@ services:
 volumes:
   db_postgresql:
   static:
-
-networks:
-  backend-network:
