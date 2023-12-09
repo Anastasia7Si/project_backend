@@ -2,8 +2,9 @@ version: '3.8'
 
 services:
   app:
-    image: anasti97/backend:latest
-    restart: always
+    build:
+      context: ./src
+      dockerfile: ./src/Dockerfile
     ports:
      - 8000:8000
     env_file: ./.env
